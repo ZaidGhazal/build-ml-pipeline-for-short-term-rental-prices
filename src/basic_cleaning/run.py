@@ -46,7 +46,7 @@ def go(args):
     logger.info("CLEANING: Log output artifact: clean_sample.csv")
     run.log_artifact(output_art)
 
-    run.finish()
+    
 
 if __name__ == "__main__":
 
