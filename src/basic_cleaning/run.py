@@ -41,6 +41,10 @@ def go(args):
         description=args.output_description
     )
 
+    logger.info("CLEANING: Filter Geolocations ")
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+
     df.to_csv("clean_sample.csv", index=False)
     output_art.add_file("clean_sample.csv") # Path to file locally
     logger.info("CLEANING: Log output artifact: clean_sample.csv")
