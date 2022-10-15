@@ -5,14 +5,30 @@ entry_points:
   main:
     parameters:
 
-      parameter1:
-        description: ## ADD DESCRIPTION
+      input_artifact:
+        description: raw data to be cleaned path
         type: string
 
-      parameter2:
-        description: ## ADD DESCRIPTION
+      output_artifact:
+        description: cleaned dataset path
         type: string
+
+      output_type:
+        description: dataset
+        type: string
+
+      output_description:
+        description: Output artifact description
+        type: string
+
+      min_price:
+        description: minimum price to consider in the dataset while cleaning
+        type: float
+
+      max_price:
+        description: maximum price to consider in the dataset while cleaning
+        type: float
 
 
     command: >-
-        python run.py  --parameter1 {parameter1}  --parameter2 {parameter2} 
+        python run.py  --input_artifact {input_artifact}  --output_artifact {output_artifact}  --output_type {output_type}  --output_description {output_description}  --min_price {min_price}  --max_price {max_price} 

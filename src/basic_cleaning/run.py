@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 """
-Clean data
+An example of a step using MLflow and Weights & Biases]: Download from W&B the raw dataset and apply some basic data cleaning, exporting the result to a new artifact
 """
 import argparse
 import logging
+import string
 import wandb
+import pandas as pd
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
@@ -18,29 +20,78 @@ def go(args):
 
     # Download input artifact. This will also log that this script is using this
     # particular version of the artifact
-    # artifact_local_path = run.use_artifact(args.input_artifact).file()
+    logger.info("CLEANING: Get input artifact")
+    input_artifact_local_path = run.use_artifact(args.input_artifact).file()
 
-    ######################
-    # YOUR CODE HERE     #
-    ######################
+    df = pd.read_csv(input_artifact_local_path) 
 
+    logger.info("CLEANING: Clean dataframe")
+    # Drop outliers
+    min_price = args.min_price
+    max_price = args.max_price
+    idx = df['price'].between(min_price, max_price)
+    df = df[idx].copy()
+    # Convert last_review to datetime
+    df['last_review'] = pd.to_datetime(df['last_review'])
+
+    logger.info("CLEANING: Create output artifact")
+    output_art = wandb.Artifact(
+        name=args.output_artifact,
+        type=args.output_type,
+        description=args.output_description
+    )
+
+    df.to_csv("clean_sample.csv", index=False)
+    output_art.add_file("clean_sample.csv") # Path to file locally
+    logger.info("CLEANING: Log output artifact: clean_sample.csv")
+    run.log_artifact(output_art)
+
+    run.finish()
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Cleaning Data")
+    parser = argparse.ArgumentParser(description="A very basic data cleaning")
 
 
     parser.add_argument(
-        "--parameter1", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--input_artifact", 
+        type=str,
+        help="raw data to be cleaned path",
         required=True
     )
 
     parser.add_argument(
-        "--parameter2", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--output_artifact", 
+        type=str,
+        help="cleaned dataset path",
+        required=True
+    )
+
+    parser.add_argument(
+        "--output_type", 
+        type=str,
+        help="dataset",
+        required=True
+    )
+
+    parser.add_argument(
+        "--output_description", 
+        type=str,
+        help="Output artifact description",
+        required=True
+    )
+
+    parser.add_argument(
+        "--min_price", 
+        type=float,
+        help="minimum price to consider in the dataset while cleaning",
+        required=True
+    )
+
+    parser.add_argument(
+        "--max_price", 
+        type=float,
+        help="maximum price to consider in the dataset while cleaning",
         required=True
     )
 
