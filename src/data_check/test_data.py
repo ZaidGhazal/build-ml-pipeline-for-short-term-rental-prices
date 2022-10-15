@@ -63,7 +63,26 @@ def test_similar_neigh_distrib(data: pd.DataFrame, ref_data: pd.DataFrame, kl_th
 
 
 def test_row_count(data: pd.DataFrame):
+    """Check if data has acceptable shape
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        data to be checked
+    """    
     assert 15000 < data.shape[0] < 1000000
 
-def test_price_range(data, min_price, max_price):
+def test_price_range(data: pd.DataFrame, min_price: float, max_price: float):
+    """Check the price column. The prices must be within acceptable range [min_price, max_price]
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Data to be checked
+    min_price : float
+        Min price value
+    max_price : float
+        Max price value
+    """    
+    
     assert (data["price"].between(min_price, max_price+1)).all()
