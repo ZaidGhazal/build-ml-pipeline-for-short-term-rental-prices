@@ -1,3 +1,4 @@
+# Build-ml-pipeline-for-short-term-rental-prices
 In this project, a reproducible pipeline was built using Python machine learning tools and MLflow. A property management company renting rooms and properties for short periods of time on various rental platforms published part of its data for the communities interested in data analysis, data science, machine learning, etc...
 
 This project aimed to build an end-to-end deployable and reusable pipeline that can be used to clean, validate, segregate, check, and preprocess the dataset, then estimate the typical price for a given property based on the price of similar properties.
